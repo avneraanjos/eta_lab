@@ -1,7 +1,20 @@
 class Phonebook:
-
     def __init__(self):
-        self.entries = {'POLICIA': '190'}
+        self.entries = {"POLICIA": "190"}
+
+    @staticmethod
+    def validate_name(name: str) -> bool:
+        invalid_list = ["!", "@", "%", "$", "#"]
+        for invalid_char in invalid_list:
+            if invalid_char in name:
+                return False
+        return True
+
+    @staticmethod
+    def validate_number(number: str) -> bool:
+        if number.strip() == "":
+            return False
+        return True
 
     def add(self, name, number):
         """
@@ -10,42 +23,29 @@ class Phonebook:
         :param number: number of person in string
         :return: 'Nome invalido' or 'Numero invalido' or 'Numero adicionado'
         """
-        if '#' in name:
-            return 'Nome invalido'
-        if '@' in name:
-            return 'Nme invalido'
-        if '!' in name:
-            return 'Nome invalido'
-        if '$' in name:
-            return 'Nome invalio'
-        if '%' in name:
-            return 'Nome invalido'
 
-        if len(number) < 0:
-            return 'Numero invalid'
+        if not Phonebook.validate_name(name):  # BUG: retorno com erro de
+            return "Nome invalido"
+
+        if not Phonebook.validate_number(number):  # BUG: erro de logica do tamanho
+            return "Numero invalido"
 
         if name not in self.entries:
             self.entries[name] = number
-
-        return 'Numero adicionado'
+            return "Numero adicionado"
 
     def lookup(self, name):
         """
         :param name: name of person in string
         :return: return number of person with name
         """
-        if '#' in name:
-            return 'Nome invaldo'
-        if '@' in name:
-            return 'Nome invalido'
-        if '!' in name:
-            return 'Nme invalido'
-        if '$' in name:
-            return 'Nome invalido'
-        if '%' in name:
-            return 'Nome nvalido'
+        if not Phonebook.validate_name(name):  # BUG: retorno com erro de
+            return "Nome invalido"
 
-        return self.entries[name]
+        if name in self.entries:  # BUG: Quebra ao buscar por nome inexistente
+            return self.entries[name]
+        else:
+            None
 
     def get_names(self):
         """
@@ -67,7 +67,7 @@ class Phonebook:
         :return: return 'phonebook limpado'
         """
         self.entries = {}
-        return 'phonebook limpado'
+        return "phonebook limpado"
 
     def search(self, search_name):
         """
@@ -86,7 +86,7 @@ class Phonebook:
 
         :return: return phonebook in sorted order
         """
-        return self.entries
+        return sorted(self.entries)  # BUG: dict uses hash
 
     def get_phonebook_reverse(self):
         """
@@ -102,4 +102,30 @@ class Phonebook:
         :return: return 'Numero deletado'
         """
         self.entries.pop(name)
-        return 'Numero deletado'
+        return "Numero deletado"
+
+    def change_number(self, name, number):
+        """
+        Delete person with name
+        :param name: String with name
+        :return: return 'Numero deletado'
+        """
+        if name in self.entries:
+            self.entries[name]=number
+            return 'Numero alterado'
+        return "Numero nao encontrado"
+
+    def get_name_by_number(self, number):
+        """
+        Given a number return the name
+        :param number: String with name
+        :return: return the number for the given name
+        """
+
+        for entry_name, entry_number in self.entries.items():
+            if   number == entry_number:
+                return  entry_name
+        return 'Nao encontrado'
+
+
+
